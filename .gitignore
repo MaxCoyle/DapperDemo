@@ -1,9 +1,3 @@
-DapperDemo/bin/
-DapperDemo/obj/
-IntegrationTests/bin/
-IntegrationTests/obj/
-Models/bin/
-Models/obj/
-Repositories/bin/
-Repositories/obj/
+**/*/bin
+**/*/obj
 .vs/
