@@ -1,7 +1,10 @@
-﻿using DapperDemo.Configuration;
+﻿using System;
+using DapperDemo.Configuration;
 using Microsoft.Extensions.Configuration;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
+using Models;
 using Repositories;
 using Xunit;
 
@@ -20,10 +23,9 @@ namespace IntegrationTests
                 .Build();
             _dapperConfig = new DapperConfig(configuration);
         }
-
-        // Execute a query and map the results to a strongly typed List
+        
         [Fact]
-        public async Task GetListOfCities()
+        public async Task GetListOfCitiesIsSuccessful()
         {
             // Arrange
             var cityRepository = new CityRepository(_dapperConfig.ConnectionString);
@@ -35,8 +37,25 @@ namespace IntegrationTests
             Assert.NotEmpty(listOfCities);
         }
 
-        // Execute a query and map it to a list of dynamic objects
+        [Fact]
+        public async Task AddNewCityToListOfCitiesIsSuccessful()
+        {
+            // Arrange
+            var cityRepository = new CityRepository(_dapperConfig.ConnectionString);
+            var expectedCity = new City
+            {
+                Name = $"Test City { Guid.NewGuid() }",
+                Description = "City added via testing"
+            };
 
-        // Execute a Command that returns no results
+            // act
+            await cityRepository.AddCity(expectedCity);
+            var listOfCities = (await cityRepository.GetListOfCities()).ToList();
+            var actualCity = listOfCities.First(city => city.Name == expectedCity.Name);
+
+            // Assert
+            Assert.Equal(expectedCity.Name, actualCity.Name);
+            Assert.Equal(expectedCity.Description, actualCity.Description);
+        }
     }
 }

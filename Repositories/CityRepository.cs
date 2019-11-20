@@ -10,6 +10,7 @@ namespace Repositories
     public class CityRepository : ICityRepository
     {
         private const string SelectAllCitiesSql = "SELECT Id, [Name], [Description] FROM City";
+        private const string InsertNewCitySql = "INSERT INTO City([Name], [Description]) VALUES (@name, @description)";
         private readonly string _connectionString;
 
         public CityRepository(string connectionString)
@@ -26,6 +27,17 @@ namespace Repositories
             }
 
             return await Task.FromResult(cityList);
+        }
+
+        public async Task<int> AddCity(City newCity)
+        {
+            int rowsAffected;
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                rowsAffected = connection.Execute(InsertNewCitySql, new { newCity.Name, newCity.Description });
+            }
+
+            return await Task.FromResult(rowsAffected);
         }
     }
 }
