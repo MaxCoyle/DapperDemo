@@ -7,5 +7,6 @@ namespace Repositories
     public interface ICityRepository
     {
         Task<IEnumerable<City>> GetListOfCities();
+        Task<int> AddCity(City newCity);
     }
 }

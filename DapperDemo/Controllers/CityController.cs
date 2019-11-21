@@ -23,5 +23,12 @@ namespace DapperDemo.Controllers
         {
             return await _cityRepository.GetListOfCities();
         }
+
+        // POST api/values
+        [HttpPost]
+        public async Task<int> Post([FromBody] City city)
+        {
+            return await _cityRepository.AddCity(city);
+        }
     }
 }
